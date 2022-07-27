@@ -25,9 +25,9 @@ public class MemberController {
     public ResponseMapper login(@RequestBody @Valid LoginMemberRequest request) {
         Optional<Member> login = memberService.login(request.getName(), request.getPassword());
         if (login.isPresent()) {
-            return new ResponseMapper(HttpStatus.OK.value(), "로그인 성공", new LoginMemberResponse(login.get().getId()));
+            return ResponseMapper.register(HttpStatus.OK, new LoginMemberResponse(login.get().getId()));
         } else {
-            return new ResponseMapper(HttpStatus.UNAUTHORIZED.value(), "존재하지 않는 회원 혹은 비밀번호입니다.");
+            return ResponseMapper.register(HttpStatus.UNAUTHORIZED);
         }
     }
 
