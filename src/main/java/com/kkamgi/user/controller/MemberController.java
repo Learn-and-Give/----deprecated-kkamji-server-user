@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,15 +20,27 @@ public class MemberController {
 
     private final MemberService memberService;
 
+//    @ApiOperation(value = "로그인", notes = "회원 여부를 확인한다.")
+//    @ApiImplicitParam(name = "request", value = "이름, 비밀번호", required = true)
+//    @PostMapping("v1/login")
+//    public ResponseMapper login(@RequestBody @Valid LoginMemberRequest request) {
+//        Optional<Member> login = memberService.login(request.getName(), request.getPassword());
+//        if (login.isPresent()) {
+//            return ResponseMapper.register(HttpStatus.OK, new LoginMemberResponse(login.get().getId()));
+//        } else {
+//            return ResponseMapper.register(HttpStatus.UNAUTHORIZED);
+//        }
+//    }
+
     @ApiOperation(value = "로그인", notes = "회원 여부를 확인한다.")
     @ApiImplicitParam(name = "request", value = "이름, 비밀번호", required = true)
     @PostMapping("v1/login")
-    public ResponseMapper login(@RequestBody @Valid LoginMemberRequest request) {
+    public ResponseEntity login(@RequestBody @Valid LoginMemberRequest request) {
         Optional<Member> login = memberService.login(request.getName(), request.getPassword());
         if (login.isPresent()) {
-            return ResponseMapper.register(HttpStatus.OK, new LoginMemberResponse(login.get().getId()));
+            return new ResponseEntity(new LoginMemberResponse(login.get().getId()), HttpStatus.OK);
         } else {
-            return ResponseMapper.register(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -44,6 +57,6 @@ public class MemberController {
     @Data
     @AllArgsConstructor
     static class LoginMemberResponse {
-        private Long id;
+        private Long userId;
     }
 }
